@@ -1,0 +1,5 @@
+interface:
+  display_name: "x-cli"
+  short_description: "Use X/Twitter from the x-cli command line"
+  brand_color: "#111111"
+  default_prompt: "Use $x-cli to search X for recent discussion about AI agents and summarize the strongest signals."
