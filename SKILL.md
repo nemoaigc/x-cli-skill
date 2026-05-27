@@ -1,24 +1,44 @@
 ---
-name: x-cli
+name: x
 description: >
-  X/Twitter toolkit for reading tweets, timelines, articles, scanning trends, and writing
-  (post/reply/quote/follow/like/block/delete). Load this skill whenever the user mentions
-  Twitter, X, tweets, timelines, feeds, following, followers, trending topics, or any
-  X-related account — even casually, like "看看X有啥", "scan my timeline", "draft a reply",
-  "find someone on Twitter", "what's trending", "帮我发推", or "check what @someone posted".
-  Also trigger when the user wants to engage with social media content (like, retweet, bookmark),
-  research people/topics via their X presence, or draft social media posts in X's style.
-  Three modes: read (search/fetch), trend (discover), write (post/engage). If there's even
-  a slight chance the task touches X/Twitter, load this skill — it's cheap to load and
-  expensive to skip.
+  Use for any X/Twitter task, especially Chinese requests like "去 X 上调研一下",
+  "看看 X 今天 agent/AI/crypto/design 圈发生了什么", "搜一下推特", "看某账号最近发了啥",
+  "找 X 上的论文/项目/新闻线索", "帮我写/发/回复一条推". This is an agent-facing
+  X research and action workflow: plan the source mix, derive the time window,
+  choose keywords/accounts/trends, call the installed x-cli binary, then synthesize
+  a report. Also use for timelines, tweets, feeds, follows/followers, trending topics,
+  likes/retweets/bookmarks, posts, replies, quotes, follows, deletes, and X-style drafts.
 ---
 
-# x-cli skill
+# X skill
 
-Companion guide for the standalone [`x-cli`](https://github.com/nemoaigc/x-cli)
-binary. The CLI handles every X/Twitter operation; this skill tells you
-*when* to use which subcommand, how to compose ranking/filtering, and the
-discipline for write actions.
+Agent workflow for researching and acting on X/Twitter. The installed
+[`x-cli`](https://github.com/nemoaigc/x-cli) binary is only the execution engine;
+this skill owns the planning: source selection, time window, keyword/account
+choice, trend checks, ranking/filtering, synthesis, and write safety.
+
+## Default behavior
+
+When the user asks to "go to X", "search Twitter", "look up tweets", "check an
+account", "research today's news", "find papers from X", or similar, load this
+skill and proceed. Do not ask whether to use `x-cli` when the X/Twitter intent is
+clear.
+
+For broad research requests, first state a compact execution plan, then run it:
+
+1. Resolve the domain and time window from the prompt.
+   - "today" = current local date.
+   - "this week" = last 7 days unless the user gives exact dates.
+   - "recent/latest" = last 2-7 days, adjusted by domain velocity.
+2. Load `references/search-plan.md`.
+3. Probe sources before committing to thresholds: follow-circle, keyword search,
+   trend scan, and long-form/articles when relevant.
+4. Synthesize topics semantically. Do not dump raw tweets.
+5. If the user asks for papers, extract arXiv/OpenReview/PDF/project links from X
+   results and verify them with web/arXiv search when available.
+
+Only ask a clarifying question when the domain is genuinely ambiguous enough that
+running would likely collect the wrong corpus.
 
 ## Pick a mode
 
@@ -49,7 +69,7 @@ discipline for write actions.
 Engagement writes (`x-cli engage like/retweet/bookmark`) execute immediately — they're
 low-risk reactions, no `--yes` gate.
 
-Ambiguous case: treat as read mode; note in the report that trend/write modes are available.
+Ambiguous case: treat as read mode and mention trend/write modes only if useful.
 
 ## Prerequisites
 
@@ -68,7 +88,7 @@ Every `x-cli` invocation emits JSON to stdout:
 ```
 
 Final deliverables for the skill are Markdown reports written to the working directory:
-- Read mode: `./x-cli-<slug>-<YYYYMMDD>/`
+- Read mode: `./x-research-<slug>-<YYYYMMDD>/`
 - Trend mode: `./x-trend-<YYYYMMDD>/`
 - Write mode: no deliverable file; result is the action confirmation in stdout + audit log
 

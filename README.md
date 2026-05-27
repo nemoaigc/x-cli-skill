@@ -1,8 +1,9 @@
-# x-cli-skill
+# X skill
 
-Claude Code skill that drives [`x-cli`](https://github.com/nemoaigc/x-cli) —
-the standalone X/Twitter command-line toolkit. This package is pure prose
-+ references; all logic lives in `x-cli`.
+Claude/Codex skill for researching and acting on X/Twitter. It plans the
+research workflow, chooses sources and time windows, then drives
+[`x-cli`](https://github.com/nemoaigc/x-cli), the standalone X/Twitter command
+line toolkit.
 
 ## Install
 
@@ -17,18 +18,44 @@ the standalone X/Twitter command-line toolkit. This package is pure prose
 
    ```bash
    git clone https://github.com/nemoaigc/x-cli-skill ~/.claude/skills/x-cli
+   ln -sf ~/.claude/skills/x-cli/commands/x.md ~/.claude/commands/x.md
+   ln -sf ~/.claude/skills/x-cli/commands/x-research.md ~/.claude/commands/x-research.md
+   ln -sf ~/.claude/skills/x-cli/commands/x-cli.md ~/.claude/commands/x-cli.md
    ```
 
    (Or symlink from wherever you keep this repo.)
 
 3. Restart Claude Code. The skill activates whenever the user mentions
-   Twitter / X / tweets / timelines / etc. (see `SKILL.md` `description`).
+   Twitter / X / tweets / timelines / X research / X news / X papers / etc.
+   (see `SKILL.md` `description`).
+
+## Use
+
+Natural language should trigger the skill:
+
+```text
+去 X 调研下今天的 agent 新闻，有啥论文也拿过来
+```
+
+Slash commands are also provided:
+
+```text
+/x 去 X 调研下今天的 agent 新闻，有啥论文也拿过来
+/x 看 @karpathy 这周发了什么
+/x-research post-training 新论文 this month
+/x-cli trend scan
+```
+
+`/x` is the primary entry. `/x-cli` is kept as a compatibility alias.
 
 ## What's in here
 
 | File                          | Purpose                                                                  |
 |-------------------------------|---------------------------------------------------------------------------|
-| `SKILL.md`                    | Skill manifest + mode-selection guide (read / trend / write)              |
+| `SKILL.md`                    | Skill manifest + X research/action workflow                               |
+| `commands/x.md`               | Primary slash command wrapper                                             |
+| `commands/x-research.md`      | Research-only slash command wrapper                                       |
+| `commands/x-cli.md`           | Compatibility alias for `/x`                                              |
 | `references/LLMs.md`          | Quick command map + failure-modes table                                   |
 | `references/read-mode.md`     | Single-call flag rubric for `x-cli search / user / tweet / feed / list`  |
 | `references/search-plan.md`   | Multi-source research pipeline (follow-circle + keyword + trending + long-form) |
