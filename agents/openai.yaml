@@ -1,5 +1,5 @@
 interface:
-  display_name: "X"
-  short_description: "Research and act on X/Twitter"
+  display_name: "x-cli-skill (Deprecated)"
+  short_description: "Use x-cli bundled x-research instead"
   brand_color: "#111111"
-  default_prompt: "Use $x to research today's AI agent news on X and summarize the strongest signals."
+  default_prompt: "Use $x-cli-skill to migrate to the bundled $x-research skill in x-cli."
